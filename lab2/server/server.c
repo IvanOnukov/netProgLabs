@@ -7,53 +7,6 @@
 #include <unistd.h>
 #include "../lib/errproc.h"
 
-// int Socket(int domain, int types, int protocol)
-// {
-//     int result = socket(domain, types, protocol);
-
-//     if (result == -1)
-//     {
-//         //ошибка неверный файловый дискриптор
-//         perror("soket failed");
-//         exit(EXIT_FAILURE);
-//     }
-//     return result;
-// }
-
-// void Bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
-// {
-//     int result = bind(sockfd, addr, addrlen);
-//     if (result == -1)
-//     {
-//         // обишибка связывания сокета с адресом
-//         perror("bind  failed");
-//         exit(EXIT_FAILURE);
-//     }
-// }
-
-// void Listen(int sockfd, int backlog)
-// {
-//     int result = listen(sockfd, backlog);
-//     if (result == -1)
-//     {
-//         // ошибка прослущивания порта
-//         perror("listen  failed");
-//         exit(EXIT_FAILURE);
-//     }
-// }
-
-// int Accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
-// {
-//     int result = accept(sockfd, addr, addrlen);
-//     if (result == -1)
-//     {
-//         // ошибка подключения
-//         perror("accept failed");
-//         exit(EXIT_FAILURE);
-//     }
-//     return result;
-// }
-
 int main()
 {
 
@@ -67,30 +20,35 @@ int main()
     Listen(serverSoc, 5);
     socklen_t adrlen = sizeof(adr);
     // сокет для общения с клиентом
-    int file_di = Accept(serverSoc, (struct sockaddr *)&adr, &adrlen);
+    int fd = Accept(serverSoc, (struct sockaddr *)&adr, &adrlen);
 
     //чтение данных от клиента
     ssize_t nread;
     char bufer[1024];
 
-    nread = read(file_di, bufer, 1024);
-
-    if (nread == -1)
+    int status_sesion = 1;
+    while (status_sesion)
     {
-        perror("read failure");
-        exit(EXIT_FAILURE);
-    }
-    else if (nread == 0)
-    {
-        printf("конец файла");
-    }
-    write(STDOUT_FILENO, bufer, nread); // что полученно от клиента
-    write(file_di, bufer, nread);       // отправка ответа
 
-    sleep(2);
+        nread = read(fd, bufer, 1024);
 
-    close(file_di); // закрытие сокета для связи с клиентом 
-    close(listen); // закрытие прослушивающего сокета 
-    
+        if (nread == -1)
+        {
+            perror("read failure");
+            exit(EXIT_FAILURE);
+        }
+        else if (nread == 0)
+        {
+            printf("конец файла");
+            status_sesion = 0;
+        }
+        write(STDOUT_FILENO, bufer, nread); // что полученно от клиента
+
+        write(fd, bufer, nread); // отправка ответа
+    }
+
+    close(fd);        // закрытие сокета для связи с клиентом
+    close(serverSoc); // закрытие прослушивающего сокета
+
     return 0;
 }
