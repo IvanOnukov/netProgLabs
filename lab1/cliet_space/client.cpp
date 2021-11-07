@@ -40,7 +40,7 @@ int main()
     {
         ofstream query;
         uint numElement;
-        cout << "ввведите количество эдиментов\n > ";
+        cout << "ввведите количество элементов\n > ";
 
         cin >> numElement;
         int arrElemrnt[numElement];
