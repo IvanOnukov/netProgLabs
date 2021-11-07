@@ -5,121 +5,77 @@
 
 using namespace std;
 
+long int cheakSize(string inputPathFile)
+{
+    long int sizeInputFile;
+
+    ifstream cheakFile(inputPathFile, ios::binary | ios::ate);
+    sizeInputFile = cheakFile.tellg();
+    cheakFile.close();
+    return sizeInputFile;
+}
+
+double arithmeticAverg(uint sized, int mas[])
+{
+
+    long int sum = 0;
+    for (int i = 0; i < sized; i++)
+    {
+        sum += mas[i];
+    }
+    return sum / sized;
+}
+
+void clearFile(string pathFile)
+{
+    ofstream clearFile;
+    clearFile.open(pathFile, ios_base::trunc);
+    clearFile.close();
+}
+
 int main()
 {
     setlocale(LC_ALL, "rus");
-    
+
     string inputPathFile = "../shared_file/useQuery.txt";
     string outputPathFile = "../shared_file/serverRespanse.txt";
 
-    map<string, string> dictionaryRuToTr = {
-        {"а", "a"},
-        {"б", "b"},
-        {"в", "v"},  
-        {"г", "g"},
-        {"д", "d"},
-        {"е", "e"},
-        {"ё", "yo"},
-        {"ж", "zh"},
-        {"з", "z"},
-        {"и", "i"},
-        {"й", "j"},
-        {"к", "k"},
-        {"л", "l"},
-        {"м", "m"},
-        {"н", "n"},
-        {"о", "o"},
-        {"п", "p"},
-        {"р", "r"},
-        {"с", "s"},
-        {"т", "t"},
-        {"у", "u"},
-        {"ф", "f"},
-        {"х", "x"},
-        {"ц", "c"},
-        {"ч", "ch"},
-        {"ш", "sh"},
-        {"щ", "shh"},
-        {"ъ", "\""},
-        {"ы", "y'"},
-        {"ь", "\'"},
-        {"э", "eh"},
-        {"ю", "ju"},
-        {"я", "ja"},
-        {" ", " "}
-     
-    };
+    clearFile(outputPathFile);
+    long int sizeInputFile = 0;
+    ifstream userFile(inputPathFile);
 
-    map<char*, string> dictionaryTrToRu = {
-        {"a", "а"},
-        {"b", "б"},
-        {"v", "в"},  
-        {"g", "г"},
-        {"d", "д"},
-        {"e", "е"},
-        {"yo", "ё"},
-        {"zh", "ж"},
-        {"z", "з"},
-        {"i", "и"},
-        {"j", "й"},
-        {"k", "к"},
-        {"l", "л"},
-        {"m", "м"},
-        {"n", "н"},
-        {"o", "о"},
-        {"p", "п"},
-        {"r", "р"},
-        {"s", "с"},
-        {"t", "т"},
-        {"u", "у"},
-        {"f", "ф"},
-        {"x", "х"},
-        {"c", "ц"},
-        {"ch", "ч"},
-        {"sh", "ш"},
-        {"shh", "Щ"},
-        {"\"", "ъ"},
-        {"y", "ы"},
-        {"\'", "ь"},
-        {"eh", "э"},
-        {"ju", "ю"},
-        {"ja", "я"},
-        {" ", " "}
-        
-        
+    while (1)
+    {
+        if (sizeInputFile < cheakSize(inputPathFile))
+        {
 
-    };
+            sizeInputFile = cheakSize(inputPathFile);
 
-    long int  sizeInputFile = 0;
+            uint sized = 0;
+            userFile >> sized;
 
-   
-    
-    ifstream cheakFile(inputPathFile, ios::binary | ios::ate);
-    if(sizeInputFile < cheakFile.tellg()){
-        cheakFile.close();
-        
-        ifstream userFile;
-        userFile.open(inputPathFile);
-        if(userFile.is_open()){
-                      
-            ofstream outputData;
-            outputData.open(outputPathFile);
-            string readUserFile;
-            
-            while (getline(userFile, readUserFile))
+            int *mas = new int[sized]();
+            for (int i = 0; i < sized; i++)
             {
-                string transformString = " ";
-                for(int i = 0; i < readUserFile.length(); i++){
-                
-                  char &swp = readUserFile[i];
-                  cout <<  dictionaryTrToRu.at(&swp);  
-                //transformString.insert(i, dictionaryRuToTr.find(readUserFile[i])) 
-               
-                }
+                userFile >> mas[i];
             }
+
+            // cout << arithmeticAverg(sized, mas) << endl;
+
+            if (userFile.is_open())
+            {
+                double result = arithmeticAverg(sized, mas);
+                cout << result << endl;
+                ofstream outputData(outputPathFile, ios_base::app);
+                outputData << result;
+                outputData << "\n";
+                outputData.close();
+                result = 0;
+            }
+
+            delete (mas);
         }
-    } 
-
-
-   
+    }
+    //userFile.close();
+    return 0;
 }
