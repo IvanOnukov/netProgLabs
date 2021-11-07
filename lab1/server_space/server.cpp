@@ -54,9 +54,8 @@ int main()
 
             int *mas = new int[sized]();
             for (int i = 0; i < sized; i++)
-            {
                 userFile >> mas[i];
-            }
+            
 
     
             if (userFile.is_open())
