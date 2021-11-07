@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <map>
 
 using namespace std;
 
@@ -20,9 +19,8 @@ double arithmeticAverg(uint sized, int mas[])
 
     long int sum = 0;
     for (int i = 0; i < sized; i++)
-    {
         sum += mas[i];
-    }
+    
     return sum / sized;
 }
 
@@ -60,8 +58,7 @@ int main()
                 userFile >> mas[i];
             }
 
-            // cout << arithmeticAverg(sized, mas) << endl;
-
+    
             if (userFile.is_open())
             {
                 double result = arithmeticAverg(sized, mas);
@@ -76,6 +73,5 @@ int main()
             delete (mas);
         }
     }
-    //userFile.close();
     return 0;
 }
