@@ -24,6 +24,7 @@ int main()
     struct sockaddr_in adr = {0};
     adr.sin_family = AF_INET;    //IPv4
     adr.sin_port = htons(48999); //прослушка на порте
+    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     Bind(serverSoc, (struct sockaddr *)&adr, sizeof adr);
     Listen(serverSoc, 5);
@@ -34,43 +35,49 @@ int main()
 
     //чтение данных от клиента
 
+    struct File DataIn;
+    int countElement;
     int nread;
     char bufer[4096];
 
-    int status_sesion = 1;
-    while (status_sesion)
-    {
+    recv(STDOUT_FILENO, &DataIn, sizeof(DataIn), 0);
 
-        nread = recv(fd, &DataIn, sizeof(DataIn), 0);
 
-        if (nread == -1)
-        {
-            perror("read failure");
-            exit(EXIT_FAILURE);
-        }
-        else if (nread == 0)
-        {
-            printf("конец файла");
-            status_sesion = 0;
-        }
 
-        int sizeInData = 0;
-        recv(STDOUT_FILENO, &sizeInData, sizeof(sizeInData), 0); // количество элиментов
+    // int status_sesion = 1;
+    // while (status_sesion)
+    // {
+    //     nread = recv(fd, &DataIn, sizeof(DataIn), 0);
 
-        if (sizeInData < 0)
-        {
-            printf("ошибка при считывании количества элементов\n");
-            status_sesion = 0;
-        }
+    //     if (nread == -1)
+    //     {
+    //         perror("read failure");
+    //         exit(EXIT_FAILURE);
+    //     }
+    //     else if (nread == 0)
+    //     {
+    //         printf("конец файла");
+    //         status_sesion = 0;
+    //     }
 
-        struct File DataIn[sizeInData];
-        for (int i = 0; i < sizeInData; i++)
-        {
-            recv(STDOUT_FILENO, &DataIn, sizeof(DataIn), 0); // что полученно от клиента
-        }
-       
-        send(fd, bufer, nread); // отправка ответа
-    }
+    //     int sizeInData = 0;
+    //     recv(STDOUT_FILENO, &sizeInData, sizeof(sizeInData), 0); // количество элиментов
+
+    //     if (sizeInData < 0)
+    //     {
+    //         printf("ошибка при считывании количества элементов\n");
+    //         status_sesion = 0;
+    //     }
+
+    //     struct File DataIn[sizeInData];
+    //     for (int i = 0; i < sizeInData; i++)
+    //     {
+    //         recv(STDOUT_FILENO, &DataIn, sizeof(DataIn), 0); // что полученно от клиента
+    //     }
+
+    //    send(fd, &DataIn, nread, 0);
+    //     // send(fd, bufer, nread, 0); // отправка ответа
+    // }
 
     close(fd);        // закрытие сокета для связи с клиентом
     close(serverSoc); // закрытие прослушивающего сокета

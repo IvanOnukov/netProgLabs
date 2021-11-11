@@ -30,62 +30,65 @@ int main()
     int arg;
     printf("1) start\n2) stop\n");
     scanf("%d", &arg);
+    struct File DataOut={"lol", 1234, 908, 1};
 
-    while (arg == 1)
-    {
-        printf("Введите количество вайлов\n");
-        unsigned int size_arr = 0;
-        scanf("%d", &size_arr);
+    send(fd, &DataOut, sizeof(DataOut), 0);
 
-        struct File DataOut[size_arr];
+    // while (arg == 1)
+    // {
+    //     printf("Введите количество вайлов\n");
+    //     unsigned int size_arr = 0;
+    //     scanf("%u", &size_arr);
 
-        send(fd, &size_arr, sizeof(size_arr));
+    //     struct File DataOut[size_arr];
 
-        for (int i = 0; i < size_arr; i++)
-        {
-            printf("номер файла %d общее количество %d", i + 1, size_arr);
+    //     send(fd, &size_arr, sizeof(size_arr), 0);
 
-            printf("Введите имя файла\n");
-            scanf("%s", DataOut[i].name);
+    //     for (int i = 0; i < size_arr; i++)
+    //     {
+    //         printf("номер файла  %d  общее количество  %d\n", i + 1, size_arr);
 
-            printf("Введите размер файла\n");
-            scanf("%s", DataOut[i].size);
+    //         printf("Введите имя файла\n");
+    //         scanf("%s", DataOut[i].name);
 
-            printf("Введите дату создания в Unix стандарте  файла\n");
-            scanf("%s", DataOut[i].data_creation);
+    //         printf("Введите размер файла\n");
+    //         scanf("%ld", &DataOut[i].size);
 
-            printf("Введите количество сылак на файлы\n");
-            scanf("%s", DataOut[i].number_of_links);
-        }
+    //         printf("Введите дату создания в Unix стандарте  файла\n");
+    //         scanf("%ld", &DataOut[i].data_creation);
 
-        for (int i = 0; i < size_arr; i++)
-        {
-            write(fd, &DataOut[i], sizeof(DataOut[i]));
-        }
+    //         printf("Введите количество сылак на файлы\n");
+    //         scanf("%u", &DataOut[i].number_of_links);
+    //     }
 
-        long int sizeSearch;
-        printf("Введите интересующий размер файла\n");
-        scanf("%d", &sizeSearch);
+    //     for (int i = 0; i < size_arr; i++)
+    //     {
+    //         send(fd, &DataOut[i], sizeof(DataOut[i]), 0);
+    //     }
 
-        send(fd, &sizeSearch, sizeof(sizeSearch), 0);
+    //     long int sizeSearch;
+    //     printf("Введите интересующий размер файла\n");
+    //     scanf("%ld", &sizeSearch);
 
-        char bufer[4096];
-        ssize_t nread;
-        nread = read(fd, bufer, 4096);
+    //     send(fd, &sizeSearch, sizeof(sizeSearch), 0);
 
-        if (nread == -1)
-        {
-            perror("read failure");
-            exit(EXIT_FAILURE);
-        }
-        else if (nread == 0)
-            printf("EOF: ответ от сервера пуст");
+    //     char bufer[4096];
+    //     ssize_t nread;
+    //     nread = read(fd, bufer, 4096);
 
-        recv(STDOUT_FILENO, bufer, nread); //вывод от сервера
+    //     if (nread == -1)
+    //     {
+    //         perror("read failure");
+    //         exit(EXIT_FAILURE);
+    //     }
+    //     else if (nread == 0)
+    //         printf("EOF: ответ от сервера пуст");
 
-        printf("\n1) continue\n2) stop\n");
-        scanf("%d", &arg);
-    }
+    //     recv(STDOUT_FILENO, bufer, nread, 0); //вывод от сервера
+
+    //     printf("\n1) continue\n2) stop\n");
+    //     scanf("%d", &arg);
+    // }
     close(fd);
 
     return 0;
