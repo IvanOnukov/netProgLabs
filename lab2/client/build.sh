@@ -1,1 +1,1 @@
-gcc client.c ../lib/errproc.c -o client
+g++ client.cpp  -o client

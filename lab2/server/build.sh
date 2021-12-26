@@ -1,1 +1,1 @@
-gcc server.c ../lib/errproc.c -std=c99 -o server
+g++ server.cpp  -o server

@@ -1,9 +1,8 @@
-#ifdef ERPROC_H
-#define ERPROC_H
+#ifdef ERRPROC_H
+#define ERRPROC_H
 
 #include <sys/types.h>
 #include <sys/socket.h>
-
 
 int Socket(int domain, int types, int protocol);
 
